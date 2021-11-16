@@ -28,3 +28,7 @@ export function isImageByUser(e) {
   // return regex.test(e.src)
   return e.src
 }
+
+export function isExcludedImage(e) {
+  return e.nodeName === 'IMG' && e.getAttribute('data-no-lightbox') === 'true'
+}

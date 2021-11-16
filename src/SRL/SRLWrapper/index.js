@@ -14,7 +14,8 @@ import {
   isSimpleImage,
   isGatsbyGalleryImage,
   isGalleryImage,
-  isImageByUser
+  isImageByUser,
+  isExcludedImage
 } from './detect_types'
 // IsEqual from lodash to do a deep comparison of the objects
 import { isEqual, isEmpty } from 'lodash'
@@ -69,11 +70,14 @@ const SRLWrapper = ({
       if (collectedElements.length > 0) {
         if (!context.isLoaded) {
           handleImagesLoaded(collectedElements)
-          // preventDefault on elements inside the ref
-          Array.from(collectedElements).map((e) =>
-            e.addEventListener('click', (event) => {
-              event.preventDefault()
-            })
+          // preventDefault on elements inside the ref if image is not excluded
+          Array.from(collectedElements).map((e) => {
+            if (!isExcludedImage(e)) {
+              e.addEventListener('click', (event) => {
+                event.preventDefault()
+              })
+            }
+          }
           )
         }
       }
@@ -111,7 +115,7 @@ const SRLWrapper = ({
     function handleCreateElements(allImgs) {
       let elements = []
       allImgs.forEach((e) => {
-        if (isGalleryImage(e) || isGatsbyGalleryImage(e)) {
+        if ((isGalleryImage(e) || isGatsbyGalleryImage(e)) && !isExcludedImage(e)) {
           elements = [
             ...elements,
             {
@@ -512,9 +516,9 @@ SRLWrapper.defaultProps = {
     }
   },
   defaultCallbacks: {
-    onCountSlides: () => {},
-    onSlideChange: () => {},
-    onLightboxClosed: () => {},
-    onLightboxOpened: () => {}
+    onCountSlides: () => { },
+    onSlideChange: () => { },
+    onLightboxClosed: () => { },
+    onLightboxOpened: () => { }
   }
 }
