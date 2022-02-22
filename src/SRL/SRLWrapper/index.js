@@ -123,7 +123,7 @@ const SRLWrapper = ({
               element: e
             }
           ]
-        } else if (isSimpleImage(e)) {
+        } else if (isSimpleImage(e) && !isExcludedImage(e)) {
           elements = [
             ...elements,
             {
